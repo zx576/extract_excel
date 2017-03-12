@@ -28,26 +28,9 @@ from collections import Counter
         # 填写关联关键词，可包含多个
         'relative_words':[],
 
-2、输出在 txt 文件中
+2、输出在 excel 文件中,每个 dict 在一张新的工作簿
 输出结果如下：(实例)
-2.1、所有的结果
-{
-    'dict2': {
-        '關連交易': 32
-    },
-    'dict3': {
-        '月報表': 0,
-        '公告及通告': 167
-    },
-    'dict4': {
-        '報表': 0
-    }
-}
-2.2、有效词汇，即词频不为 0 的词汇
-[('關連交易', 32), ('公告及通告', 167)]
 
-2.3、排名前三的词汇
-[('公告及通告', 167), ('關連交易', 32)]
 
 '''
 
@@ -206,6 +189,18 @@ def handle_result(result):
 
     return relative_words,common_c
 
+def generate_excel(result):
+    xb = xw.Book()
+    for key in result.keys():
+        xs = xb.sheets.add(name=key)
+
+        inner_list = []
+        for inner_key,inner_value in result[key].items():
+            inner_list.append([inner_key,inner_value])
+
+        xs.range('A1').value = inner_list
+    xb.save()
+
 
 def main():
     '''主函数'''
@@ -218,16 +213,17 @@ def main():
     new_dict = check_input(dict_all)
     # 得到结果
     result = distribute_dict(value,new_dict)
+    generate_excel(result)
     # 写入文件
-    relative_words,common_c = handle_result(result)
-    print(relative_words,common_c)
-    print(result)
-    with open('result3.txt','w')as f:
-        f.write(json.dumps(result))
-        f.write('\n')
-        f.write(str(relative_words))
-        f.write('\n')
-        f.write(str(common_c))
+    # relative_words,common_c = handle_result(result)
+    # print(relative_words,common_c)
+    # print(result)
+    # with open('result3.txt','w')as f:
+    #     f.write(json.dumps(result))
+    #     f.write('\n')
+    #     f.write(str(relative_words))
+    #     f.write('\n')
+    #     f.write(str(common_c))
 
     return output_data
 if __name__ == '__main__':

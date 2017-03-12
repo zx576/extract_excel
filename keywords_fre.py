@@ -26,32 +26,18 @@ import json
         'main_word':'月報表',
         'relative_words':[],
 
-2、结果以如下形式
-举例：以 '公告及通告' 及 '月報表' 对 D 列进行筛选
-{
-    'dict1': {
-        '公告及通告': {
-            '2017': 3,
-            '2016': 17,
-            '2015': 49,
-            'all': 69
-        },
-        'code_name': '00001',
-        'years': [
-            2015,
-            2016,
-            2017
-        ],
-        '月報表': {
-            '2017': 3,
-            '2016': 12,
-            '2015': 12,
-            'all': 27
-        }
-    }
-}
+2、结果保存在 excel 中
 
-3、最后结果保存为 txt ,并打印输出
+结果如下：
+
+关键词	all	2017	2016	2015	2014	2013	2012	2011	2010	2009	2008	2007
+月報表	99	3	12	12	12	12	12	12	12	12	0	0
+关键词	all	2017	2016	2015	2014	2013	2012	2011	2010	2009	2008	2007
+通函	16	0	2	6	2	2	2	2	0	0	0	0
+关键词	all	2017	2016	2015	2014	2013	2012	2011	2010	2009	2008	2007
+公告及通告	0	0	0	0	0	0	0	0	0	0	0	0
+
+
 '''
 
 
@@ -166,6 +152,28 @@ def distribute_dict(value,new_dict):
 
     return output_dict
 
+def generate_excel(output_dict):
+    xb = xw.Book()
+    for key in output_dict.keys():
+        xs = xb.sheets.add(name=key)
+        r_list = []
+        for inner_key in output_dict[key].keys():
+            f_list = []
+            if inner_key == 'code_name':
+                continue
+            f_list.append(['关键词',inner_key])
+            for m_inner_key,m_inner_value in output_dict[key][inner_key].items():
+                f_list.append([m_inner_key,m_inner_value])
+            f_list.sort(reverse=True)
+            s_list = [[],[]]
+            for i in f_list:
+                s_list[0].append(i[0])
+                s_list[1].append(i[1])
+            for i in s_list:
+                r_list.append(i)
+        print(r_list)
+        xs.range('A1').value = r_list
+    xb.save()
 
 def main():
     '''主函数'''
@@ -175,9 +183,9 @@ def main():
     value = open_file(file_path,cells,sheet=sheet)
     new_dict = check_input(dict_all)
     output_dict = distribute_dict(value,new_dict)
-
-    with open('result1.txt','w')as f:
-        f.write(json.dumps(output_dict))
+    generate_excel(output_dict)
+    # with open('result1.txt','w')as f:
+    #     f.write(json.dumps(output_dict))
 
     print(output_dict)
     return output_dict
