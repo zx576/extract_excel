@@ -32,6 +32,10 @@ from collections import Counter
 输出结果如下：(实例)
 
 
+月報表	0
+公告及通告	167
+
+
 '''
 
 
