@@ -11,7 +11,7 @@ file_info = {
     # excel 表名 可为工作簿名如 'sheet1' 也可直接为工作簿顺序 从 0 开始计数，默认为 0
     'sheet':0,
     # 单元格区域
-    'cells':'A2:I413'
+    'cells':'A2:I4231'
 }
 
 配置筛选信息
@@ -36,7 +36,7 @@ file_info = {
 file_info = {
     'filepath':r'data1.xlsx',  # 文件路径
     'sheet':0,   # excel 表名 可为工作簿名如 'sheet1' 也可直接为工作簿顺序 从 0 开始计数，默认为 0
-    'cells':'A2:I413' # 单元格区域
+    'cells':'A2:I4231' # 单元格区域
 }
 
 dict_all ={
@@ -49,24 +49,25 @@ dict_all ={
         'relative_words':[],
     },
     'dict2' :{
-        'code_name':'00001',
-        'words':['關連交易','其他'],
+        'code_name':['00001','00002','00003'],
+        # 'words':['關連交易','其他'],
+        'words':['關連交易'],
         'from':'2015-01-01',
         'to':'2017-07-01',
         'main_word':'',
         'relative_words':['關連交易'],
     },
     'dict3' :{
-        'code_name':'00001',
-        'words':['公告及通告'],
+        'code_name':'',
+        'words':[],
         'from':'2007-01-01',
         'to':'2017-07-01',
         'main_word':'',
         'relative_words':['公告及通告','月報表'],
     },
     'dict4' :{
-        'code_name':'00001',
-        'words':['通函','公告及通告','月報表'],
+        'code_name':'',
+        'words':['報表'],
         'from':'2007-01-01',
         'to':'2017-07-01',
         'main_word':'',

@@ -6,6 +6,8 @@ import json
 from collections import Counter
 
 '''
+
+###2017-3-15 不再使用本文件了
 ## 3. 关联关键词
 * 出现该“关键词”的条件下，希望找到有哪些关联关键词同时出现？列出出现频率排名前3的词及出现频率。
 * 希望可以自定义检索4列，即4本不同的字典
@@ -230,5 +232,5 @@ def main():
     #     f.write(str(common_c))
 
     return output_data
-if __name__ == '__main__':
-    main()
+# if __name__ == '__main__':
+#     main()

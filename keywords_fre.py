@@ -3,6 +3,7 @@ import xlwings as xw
 from input_data import dict_all,file_info
 from datetime import datetime
 import json
+from collections import Counter
 
 '''
 ## 1. 按不同代码、不同列及对应字典，统计某“关键词”出现频率
@@ -13,7 +14,7 @@ import json
 1、 dict_all 中的 dictn 填写示意
     'dict1' :{
         ## 选填项：填写指定的 excel 中指定的代码名作为筛选条件，不填则默认选择所有代码
-        'code_name':'',   # 或者'code_name':'00001',
+        'code_name':'',   # 或者'code_name':['00001'],
 
         # 选填项：以列表的形式写入需要统计词频的关键词，空列表则不对该列做统计
         'words':['公告及通告','月報表'],
@@ -37,6 +38,8 @@ import json
 关键词	all	2017	2016	2015	2014	2013	2012	2011	2010	2009	2008	2007
 公告及通告	0	0	0	0	0	0	0	0	0	0	0	0
 
+
+同时包括了所有排名
 
 '''
 
@@ -98,7 +101,7 @@ def output_data(value,input_data,col_num):
                 continue
         # 筛选代码名，不同直接跳过
         if pre_code_name:
-            if not pre_code_name == code_name:
+            if not code_name in pre_code_name:
                 continue
         # 计数
         # word_fre = {}
@@ -153,7 +156,10 @@ def distribute_dict(value,new_dict):
     return output_dict
 
 def generate_excel(output_dict):
+    # print(output_dict)
     xb = xw.Book()
+    # 针对第一个要求
+    data_dict = {}
     for key in output_dict.keys():
         xs = xb.sheets.add(name=key)
         r_list = []
@@ -161,9 +167,17 @@ def generate_excel(output_dict):
             f_list = []
             if inner_key == 'code_name':
                 continue
+
+            ####
+
+            data_dict[inner_key] = output_dict[key][inner_key]['all']
+
+            ####
             f_list.append(['关键词',inner_key])
             for m_inner_key,m_inner_value in output_dict[key][inner_key].items():
+
                 f_list.append([m_inner_key,m_inner_value])
+                # all_list.append([m_inner_key,m_inner_value])
             f_list.sort(reverse=True)
             s_list = [[],[]]
             for i in f_list:
@@ -171,8 +185,18 @@ def generate_excel(output_dict):
                 s_list[1].append(i[1])
             for i in s_list:
                 r_list.append(i)
-        print(r_list)
+        # print(r_list)
         xs.range('A1').value = r_list
+    # print(data_dict)
+    xs = xb.sheets.add(name='alldata')
+    # c = Counter(data_dict)
+    # c_3 = c.most_common(3)
+    data_list = []
+    for i,j in data_dict.items():
+        data_list.append([i,j])
+    data_list.sort(key=lambda x: x[1],reverse=True)
+
+    xs.range('A1').value = data_list
     xb.save()
 
 def main():
@@ -187,7 +211,7 @@ def main():
     # with open('result1.txt','w')as f:
     #     f.write(json.dumps(output_dict))
 
-    print(output_dict)
+    # print(output_dict)
     return output_dict
 
 if __name__ == '__main__':

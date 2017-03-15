@@ -12,7 +12,7 @@ from datetime import datetime
 1、 dict_all 中的 dictn 填写示意
     'dict1' :{
         ## 选填项：填写指定的 excel 中指定的代码名作为筛选条件，不填则默认选择所有代码
-        'code_name':'',   # 或者'code_name':'00001',
+        'code_name':'',   # 或者'code_name':['00001'],
 
         # 选填项：以列表的形式写入需要筛选的关键词，空列表则不对该列做统计
         'words':['公告及通告','月報表'],
@@ -51,6 +51,7 @@ def output_data(value,input_data,col_num):
 
 
     '''
+    # print(input_data,col_num)
     # 生成基本字典数据
     time_limit = True
     try:
@@ -78,10 +79,12 @@ def output_data(value,input_data,col_num):
                 continue
 
         # 筛选代码名，不同直接跳过
-        if not pre_code_name == code_name and not pre_code_name:
-            continue
+        if pre_code_name:
+            if not code_name in pre_code_name:
+                continue
 
         for word in input_data['words']:
+            # print(word)
             if not word in word_list.keys():
                 word_list[word] = [[datetime.now(),word+str(col_num),None,None,None,None,None,None,None],]
             if word in col[col_num]:
@@ -115,6 +118,7 @@ def distribute_dict(value,new_dict):
     output_list = []
     for key in new_dict.keys():
         if key == 'dict1':
+            # print(3)
             col_num = 3
         elif key == 'dict2':
             # 2.标签-后	3.标签-前	4.题目
