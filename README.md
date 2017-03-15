@@ -13,7 +13,7 @@
 - input_data.py 为配置文件，在运行脚本之前，需对此进行配置
 - keywords_fre.py 为统计词频脚本，针对需求一
 - extract_info.py 为提取信息脚本，针对需求二
-- relative_words.py 为查看关联关键词脚本，针对需求三
+- *relative_words.py 为查看关联关键词脚本，针对需求三* 已于需求一合并
 
 ####3、如何运行
 针对不要需求，请打开相关的脚本，仔细查看文件开头说明
