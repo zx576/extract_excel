@@ -41,9 +41,9 @@ file_info = {
 
 dict_all ={
     'dict1' :{
-        'code_name':'',
-        'words':['公告及通告','月報表'],
-        'from':'',
+        'code_name':['00001'],
+        'words':['公告及通告'],
+        'from':'2007-07-01',
         'to':'2017-07-01',
         'main_word':'公告及通告',
         'relative_words':[],
@@ -51,22 +51,22 @@ dict_all ={
     'dict2' :{
         'code_name':['00001','00002','00003'],
         # 'words':['關連交易','其他'],
-        'words':['關連交易'],
+        'words':['關連交易','其他'],
         'from':'2015-01-01',
         'to':'2017-07-01',
         'main_word':'',
         'relative_words':['關連交易'],
     },
     'dict3' :{
-        'code_name':'',
-        'words':[],
+        'code_name':['00001'],
+        'words':['公告及通告','月報表'],
         'from':'2007-01-01',
         'to':'2017-07-01',
         'main_word':'',
         'relative_words':['公告及通告','月報表'],
     },
     'dict4' :{
-        'code_name':'',
+        'code_name':['000001'],
         'words':['報表'],
         'from':'2007-01-01',
         'to':'2017-07-01',

@@ -74,15 +74,21 @@ def output_data(value,input_data,col_num):
         time_limit = False
 
     word_fre = {}
-    for word in input_data['words']:
-        word_fre[word] = {
-            'all':0,
-        }
-        if time_limit:
-            for year in range(from_time.year,to_time.year+1):
-                word_fre[word][str(year)] = 0
-
+    # for word in input_data['words']:
+    #     word_fre[word] = {
+    #         'all':0,
+    #     }
     pre_code_name = input_data['code_name']
+    for word in input_data['words']:
+        word_fre[word] = {'all':0}
+        for code in pre_code_name:
+            word_fre[word][code] = {'all':0}
+            if time_limit:
+                for year in range(from_time.year,to_time.year+1):
+                    word_fre[word][code][str(year)] = 0
+
+    print(word_fre)
+
     # print(word_fre_D)
 
     for col in value:
@@ -103,14 +109,18 @@ def output_data(value,input_data,col_num):
         if pre_code_name:
             if not code_name in pre_code_name:
                 continue
+
+
+        # print(word_fre)
         # 计数
         # word_fre = {}
         for word in input_data['words']:
             if word in col[col_num]:
+                word_fre[word][col[1]]['all'] += 1
                 word_fre[word]['all'] += 1
                 if time_limit:
-                    word_fre[word][str(date.year)] += 1
-    word_fre['code_name'] = pre_code_name
+                    word_fre[word][col[1]][str(date.year)] += 1
+    # word_fre['code_name'] = pre_code_name
     # if time_limit:
     #     word_fre['years'] = list(range(from_time.year,to_time.year+1))
     # print(word_fre)
@@ -152,7 +162,7 @@ def distribute_dict(value,new_dict):
             col_num = 6
         result = output_data(value,new_dict[key],col_num)
         output_dict[key] = result
-
+    print(output_dict)
     return output_dict
 
 def generate_excel(output_dict):
@@ -160,33 +170,43 @@ def generate_excel(output_dict):
     xb = xw.Book()
     # 针对第一个要求
     data_dict = {}
-    for key in output_dict.keys():
-        xs = xb.sheets.add(name=key)
+    # 第一层，解开关键词某一列
+    for col_name in output_dict.keys():
+        xs = xb.sheets.add(name=col_name)
         r_list = []
-        for inner_key in output_dict[key].keys():
-            f_list = []
-            if inner_key == 'code_name':
-                continue
+        # 第二层，解开某一列下所有的关键字
+        for keyword in output_dict[col_name].keys():
+            print(keyword)
+            ####
 
             ####
 
-            data_dict[inner_key] = output_dict[key][inner_key]['all']
+            code_dict = output_dict[col_name][keyword]
+            for code in code_dict.keys():
 
-            ####
-            f_list.append(['关键词',inner_key])
-            for m_inner_key,m_inner_value in output_dict[key][inner_key].items():
+                if code == 'all':
+                    data_dict[keyword] = output_dict[col_name][keyword]['all']
+                    print(keyword,output_dict[col_name][keyword]['all'])
+                    continue
 
-                f_list.append([m_inner_key,m_inner_value])
+                f_list = []
+                f_list.append(['关键词',keyword])
+                f_list.append(['代码',code])
+                # 解压最里层
+                for m_inner_key,m_inner_value in code_dict[code].items():
+                    f_list.append([m_inner_key,m_inner_value])
                 # all_list.append([m_inner_key,m_inner_value])
-            f_list.sort(reverse=True)
-            s_list = [[],[]]
-            for i in f_list:
-                s_list[0].append(i[0])
-                s_list[1].append(i[1])
-            for i in s_list:
-                r_list.append(i)
+                f_list.sort(reverse=True)
+
+                s_list = [[],[]]
+                for i in f_list:
+                    s_list[0].append(i[0])
+                    s_list[1].append(i[1])
+                for i in s_list:
+                    r_list.append(i)
         # print(r_list)
-        xs.range('A1').value = r_list
+            xs.range('A1').value = r_list
+
     # print(data_dict)
     xs = xb.sheets.add(name='alldata')
     # c = Counter(data_dict)
@@ -195,7 +215,7 @@ def generate_excel(output_dict):
     for i,j in data_dict.items():
         data_list.append([i,j])
     data_list.sort(key=lambda x: x[1],reverse=True)
-
+    #
     xs.range('A1').value = data_list
     xb.save()
 
